@@ -19,20 +19,22 @@ public class VehicleMovement : MonoBehaviour
     {
         vehicle_transform = this.GetComponent<Transform>();
         parameter_test = SoundFactory.AddSound("event:/enginetest", null, null);
-        parameter_value = 0.5f;
+        parameter_value = 0f;
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
-        if (Input.GetKey(KeyCode.Z))
+        //Debug.Log(parameter_value);
+
+        if (Input.GetKey(KeyCode.Z) && parameter_value > 0)
         {
-            parameter_value -= .5f;
-            parameter_test.modifyFloat("Test", parameter_value);
+            parameter_value -= .05f;
+            parameter_test?.modifyFloat("Test", parameter_value);
         }
-        else if (Input.GetKey(KeyCode.X))
+        else if (Input.GetKey(KeyCode.X) && parameter_value < 10)
         {
-            parameter_value += .5f;
-            parameter_test.modifyFloat("Test", parameter_value);
+            parameter_value += .05f;
+            parameter_test?.modifyFloat("Test", parameter_value);
         }
         
         //vehicle_transform.position += Vector3.right * vehicle_speed;

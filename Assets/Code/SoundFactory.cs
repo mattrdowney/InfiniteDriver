@@ -6,7 +6,10 @@ public class SoundFactory : MonoBehaviour // create and play all sound effects u
     public static SoundStruct AddSound(string file_location, Transform transformation, Rigidbody2D rigidbody) // This function is used in other scripts to play the sound 
     {                                                                                                           
         SoundStruct sound = CreateSound(file_location); // calls the below function
-        FMODUnity.RuntimeManager.AttachInstanceToGameObject(sound.instance, transformation, rigidbody); //attaches the sound to a gameobject
+        if (transformation != null || rigidbody != null)
+        {
+            FMODUnity.RuntimeManager.AttachInstanceToGameObject(sound.instance, transformation, rigidbody); //attaches the sound to a gameobject
+        }
         return sound; //outputs the sound
     }
     private static SoundStruct CreateSound(string file_location) // creates a sound from FMOD Event and then plays it
