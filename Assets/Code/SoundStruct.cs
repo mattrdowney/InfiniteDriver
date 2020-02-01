@@ -10,8 +10,6 @@
 
     public void modifyFloat(string parameterName, float parameterValue) // This function is called in other scripts to have the sound's parameters changed 
     {
-        FMOD.Studio.ParameterInstance parameter; // create the container for the parameter 
-        instance.getParameter(parameterName, out parameter); // links the FMOD parameter to unity
-        parameter.setValue(parameterValue); // the parameter's value is changed here
+        instance.setParameterByName(parameterName, parameterValue); // actually update the parameter
     }
 }
