@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.00.00">
+	<object class="AudioFile" id="{5ccd2d1d-8c80-4967-9928-191ec4f4e40a}">
+		<property name="assetPath">
+			<value>WINNER.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>5.4419501133786845</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{13f6d66f-c74f-4d60-ba97-b9c7cfea711c}</destination>
+		</relationship>
+	</object>
+</objects>

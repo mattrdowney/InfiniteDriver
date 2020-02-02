@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class YouDied : MonoBehaviour
+public class YouStarted : MonoBehaviour
 {
 
     void Awake()
@@ -12,12 +12,13 @@ public class YouDied : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        SoundFactory.AddSound("event:/Crashed", null, null);
+        //SoundFactory.AddSound("event:/Crashed", null, null);
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        if(Input.anyKey)
+            Application.LoadLevel(Application.loadedLevel + 1);
     }
 }
