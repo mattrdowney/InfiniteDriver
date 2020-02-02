@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class VehicleMovement : MonoBehaviour
+public class VehicleSounds : MonoBehaviour
 {
     Transform vehicle_transform;
     SoundStruct parameter_test;

@@ -7,13 +7,18 @@ public class VehicleMovement : MonoBehaviour
     Transform vehicle_transform;
     NavigationPath current_navigation;
     NavigationPath next_navigation;
-    SoundStruct parameter_test;
-    float parameter_value;
 
     float horizontal_position;
     float vertical_position;
     float angle;
     float vehicle_speed = 6f;
+    
+    SoundStruct parameter_test;
+    float parameter_value;
+    float accel;
+    float gear;
+    bool isAccel;
+    bool isShifting;
 
     private void Awake()
     {
@@ -30,17 +35,51 @@ public class VehicleMovement : MonoBehaviour
 
     private void Update()
     {
-        //Debug.Log(parameter_value);
+        Debug.Log("IsAccel: " + isAccel + " IsShifting: " + isShifting + " Gear: " + gear);
 
-        if (Input.GetKey(KeyCode.Z) && parameter_value > 0)
+        if(isAccel)
+        parameter_test?.modifyFloat("Test", parameter_value);
+
+        if (transform.position.y>=0)
         {
-            parameter_value -= .05f;
-            parameter_test?.modifyFloat("Test", parameter_value);
+            isAccel = true;
+            gear = 0;
         }
-        else if (Input.GetKey(KeyCode.X) && parameter_value < 10)
+        else if (true)
         {
-            parameter_value += .05f;
-            parameter_test?.modifyFloat("Test", parameter_value);
+            isAccel = false;
+        }
+        if(isAccel == true && !isShifting)
+        {
+            switch (gear)
+            {
+                case 0:
+                    parameter_value += .02f;
+                    break;
+                case 1:
+                    parameter_value += .01f;
+                    break;
+                case 2:
+                    parameter_value += .005f;
+                    break;
+                case 3:
+                    parameter_value += .0025f;
+                    break;
+                case 4:
+                    parameter_value += .0010f;
+                    break;
+            }
+        }
+        if (parameter_value >= 10 && gear < 4)
+            isShifting = true;
+
+        if(isShifting && parameter_value > 6)
+            parameter_value -= 0.03f;
+
+        if(parameter_value <= 6 && isShifting)
+        {
+            isShifting = false;
+            gear += 1f;
         }
     }
 
@@ -83,6 +122,8 @@ public class VehicleMovement : MonoBehaviour
         if (collision.gameObject.layer == LayerMask.NameToLayer("Hazard"))
         {
             Debug.Log(collision.gameObject.name);
+            List<SoundStruct> temporary_list = new List<SoundStruct>() { parameter_test };
+            SoundFactory.DeleteSound(ref temporary_list, "event:/enginetest");
             Application.LoadLevel(Application.loadedLevel);
         }
         else if (collision.gameObject.layer == LayerMask.NameToLayer("Goal"))
