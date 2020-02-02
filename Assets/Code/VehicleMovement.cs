@@ -19,7 +19,6 @@ public class VehicleMovement : MonoBehaviour
     float gear;
     bool isAccel;
     bool isShifting;
-    bool dead = false;
 
     private void Awake()
     {
@@ -36,89 +35,83 @@ public class VehicleMovement : MonoBehaviour
 
     private void Update()
     {
-        if (!dead)
+        if (isAccel)
+            parameter_test?.modifyFloat("Test", parameter_value);
+
+        if (transform.position.y >= 0)
         {
-            if (isAccel)
-                parameter_test?.modifyFloat("Test", parameter_value);
+            isAccel = true;
+            gear = 0;
+        }
+        else if (true)
+        {
+            isAccel = false;
+        }
+        if (isAccel == true && !isShifting)
+        {
+            switch (gear)
+            {
+                case 0:
+                    parameter_value += .02f;
+                    break;
+                case 1:
+                    parameter_value += .01f;
+                    break;
+                case 2:
+                    parameter_value += .005f;
+                    break;
+                case 3:
+                    parameter_value += .0025f;
+                    break;
+                case 4:
+                    parameter_value += .0010f;
+                    break;
+            }
+        }
+        if (parameter_value >= 10 && gear < 4)
+            isShifting = true;
 
-            if (transform.position.y >= 0)
-            {
-                isAccel = true;
-                gear = 0;
-            }
-            else if (true)
-            {
-                isAccel = false;
-            }
-            if (isAccel == true && !isShifting)
-            {
-                switch (gear)
-                {
-                    case 0:
-                        parameter_value += .02f;
-                        break;
-                    case 1:
-                        parameter_value += .01f;
-                        break;
-                    case 2:
-                        parameter_value += .005f;
-                        break;
-                    case 3:
-                        parameter_value += .0025f;
-                        break;
-                    case 4:
-                        parameter_value += .0010f;
-                        break;
-                }
-            }
-            if (parameter_value >= 10 && gear < 4)
-                isShifting = true;
+        if (isShifting && parameter_value > 6)
+            parameter_value -= 0.03f;
 
-            if (isShifting && parameter_value > 6)
-                parameter_value -= 0.03f;
-
-            if (parameter_value <= 6 && isShifting)
-            {
-                isShifting = false;
-                gear += 1f;
-            }
+        if (parameter_value <= 6 && isShifting)
+        {
+            isShifting = false;
+            gear += 1f;
         }
     }
 
     void FixedUpdate()
     {
-        if (!dead)
+        if (next_navigation != null)
         {
-            if (next_navigation != null)
+            if (Time.timeSinceLevelLoad > next_navigation.start_time)
             {
-                if (Time.timeSinceLevelLoad > next_navigation.start_time)
+                if (next_navigation != current_navigation)
                 {
-                    if (next_navigation != current_navigation)
-                    {
-                        current_navigation = next_navigation;
-                        next_navigation = null;
-                    }
+                    current_navigation = next_navigation;
+                    next_navigation = null;
                 }
             }
-            if (current_navigation != null)
-            {
-                horizontal_position = current_navigation.transform.position.x +
-                        current_navigation.x_path.Evaluate(Time.timeSinceLevelLoad - current_navigation.start_time);
-                vertical_position = current_navigation.transform.position.y +
-                        current_navigation.y_path.Evaluate(Time.timeSinceLevelLoad - current_navigation.start_time);
-
-                angle = current_navigation.angle.Evaluate(Time.timeSinceLevelLoad - current_navigation.start_time);
-            }
-
-            transform.position = new Vector3(horizontal_position, vertical_position, 0f);
-            transform.eulerAngles = new Vector3(0, 0, angle);
-
-            //this.transform.position = new Vector3(horizontal_position, vertical_position, 0);
-
-            // Player exists on an AnimationCurve.
-            // When Player colides with ConstructedSite, follow a new AnimationCurve when position.x is greater than site's threshold
-            // Customizable thresholds would almost always be site.transform.position.x - site.transform.scale.x/2
         }
+        if (current_navigation != null)
+        {
+            horizontal_position = current_navigation.transform.position.x +
+                    current_navigation.x_path.Evaluate(Time.timeSinceLevelLoad - current_navigation.start_time);
+            vertical_position = current_navigation.transform.position.y +
+                    current_navigation.y_path.Evaluate(Time.timeSinceLevelLoad - current_navigation.start_time);
+
+            angle = current_navigation.angle.Evaluate(Time.timeSinceLevelLoad - current_navigation.start_time);
+        }
+
+        transform.position = new Vector3(horizontal_position, vertical_position, 0f);
+        transform.eulerAngles = new Vector3(0, 0, angle);
+
+        //this.transform.position = new Vector3(horizontal_position, vertical_position, 0);
+
+        // Player exists on an AnimationCurve.
+        // When Player colides with ConstructedSite, follow a new AnimationCurve when position.x is greater than site's threshold
+        // Customizable thresholds would almost always be site.transform.position.x - site.transform.scale.x/2
     }
 
     private void OnCollisionStay(Collision collision)
@@ -143,19 +136,5 @@ public class VehicleMovement : MonoBehaviour
                 next_navigation = pathfinding;
             }
         }
-        else if (collision.gameObject.layer == LayerMask.NameToLayer("Wall"))
-        {
-            List<SoundStruct> temporary_list = new List<SoundStruct>() { parameter_test };
-            SoundFactory.DeleteSound(ref temporary_list, "event:/enginetest");
-            dead = true;
-            this.gameObject.GetComponent<SpriteRenderer>().enabled = false;
-            StartCoroutine(you_win());
-        }
-    }
-
-    IEnumerator you_win()
-    {
-        yield return new WaitForSeconds(5);
-        Application.LoadLevel(Application.loadedLevel + 1);
     }
 }
