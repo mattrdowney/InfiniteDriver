@@ -6,9 +6,13 @@ public class EndGame : MonoBehaviour
 {
     void Update()
     {
-        if (Time.timeSinceLevelLoad > 10 || Input.GetKeyUp(KeyCode.Escape))
+        if (Time.timeSinceLevelLoad > 4 || Input.GetKeyUp(KeyCode.Escape))
         {
-            Application.Quit();
+#if UNITY_EDITOR
+         UnityEditor.EditorApplication.isPlaying = false;
+#else
+         Application.Quit();
+#endif
         }
     }
 }
