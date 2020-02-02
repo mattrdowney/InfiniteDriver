@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.00.00">
+	<object class="AudioFile" id="{29f574ef-8cac-4d91-a07e-ca7392c9970e}">
+		<property name="assetPath">
+			<value>Announcer_DerbyCars.wav</value>
+		</property>
+		<property name="isStreaming">
+			<value>true</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>96</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>15.671208333333333</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{13f6d66f-c74f-4d60-ba97-b9c7cfea711c}</destination>
+		</relationship>
+	</object>
+</objects>

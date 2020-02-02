@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class VehicleMovement : MonoBehaviour
 {
@@ -43,7 +44,6 @@ public class VehicleMovement : MonoBehaviour
         if (transform.position.y>=0)
         {
             isAccel = true;
-            gear = 0;
         }
         else if (true)
         {
@@ -78,8 +78,10 @@ public class VehicleMovement : MonoBehaviour
 
         if(parameter_value <= 6 && isShifting)
         {
-            isShifting = false;
             gear += 1f;
+            isShifting = false;
+            Debug.Log("shifted");
+            
         }
     }
 
@@ -124,7 +126,7 @@ public class VehicleMovement : MonoBehaviour
             Debug.Log(collision.gameObject.name);
             List<SoundStruct> temporary_list = new List<SoundStruct>() { parameter_test };
             SoundFactory.DeleteSound(ref temporary_list, "event:/enginetest");
-            Application.LoadLevel(Application.loadedLevel);
+            Application.LoadLevel(Application.loadedLevel + 2);
         }
         else if (collision.gameObject.layer == LayerMask.NameToLayer("Goal"))
         {
