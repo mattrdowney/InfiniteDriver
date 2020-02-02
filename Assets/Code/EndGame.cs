@@ -4,21 +4,22 @@ using UnityEngine;
 
 public class EndGame : MonoBehaviour
 {
-     void Start()
+    void Start()
     {
         SoundFactory.AddSound("event:/WINNER", null, null);
     }
     void Update()
     {
-<<<<<<< Updated upstream
+
         if (Time.timeSinceLevelLoad > 10 || Input.GetKeyUp(KeyCode.Escape))
         {
             Application.Quit();
-=======
-        if (Time.timeSinceLevelLoad > 4)
-        {
-            Application.LoadLevel(Application.loadedLevel - 2);
->>>>>>> Stashed changes
+
+            if (Time.timeSinceLevelLoad > 4)
+            {
+                Application.LoadLevel(Application.loadedLevel - 2);
+
+            }
         }
     }
 }
