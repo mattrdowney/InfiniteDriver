@@ -5,11 +5,15 @@ using UnityEngine;
 public class RepairNodeSelector : MonoBehaviour
 {
     Camera main_camera;
+    public static SelectableRepairNode[] buildings;
     
-    private static SelectableRepairNode repair_type;
-
     public static char selected = '\0';
     private static bool mouse_selected;
+
+    private void Awake()
+    {
+        buildings = new SelectableRepairNode[(int) 'w' + 1];
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -21,13 +25,13 @@ public class RepairNodeSelector : MonoBehaviour
     void Update()
     {
         // Select repair items with mouse
-        if (Input.GetMouseButtonDown(0))
+        if (selected == '\0' && Input.GetMouseButtonDown(0))
         {
             RaycastHit hit;
             Ray ray = main_camera.ScreenPointToRay(Input.mousePosition);
 
             Debug.Log("Here");
-            if (Physics.Raycast(ray, out hit, 1000, ~LayerMask.NameToLayer("UI")))
+            if (Physics.Raycast(ray, out hit, 1000, 1 << LayerMask.NameToLayer("UI")))
             {
                 Debug.Log("Here2");
                 Transform objectHit = hit.transform;
@@ -39,31 +43,34 @@ public class RepairNodeSelector : MonoBehaviour
                 mouse_selected = true;
             }
         }
-        else if ((mouse_selected && Input.GetMouseButtonUp(0)) || (!mouse_selected && Input.GetMouseButtonDown(0)))
+        else if ((mouse_selected && Input.GetMouseButtonUp(0)) || (!mouse_selected && selected != '\0' && Input.GetMouseButtonDown(0)))
         {
-            selected = '\0';
-            mouse_selected = false;
-
             RaycastHit hit;
             Ray ray = main_camera.ScreenPointToRay(Input.mousePosition);
 
             Debug.Log("Here3");
-            if (Physics.Raycast(ray, out hit, 1000, ~LayerMask.NameToLayer("Construction")))
+            if (Physics.Raycast(ray, out hit, 1000, 1 << LayerMask.NameToLayer("Build")))
             {
                 Debug.Log("Here4");
                 Transform objectHit = hit.transform;
 
                 // Do something with the object that was hit by the raycast.
 
-                ConstructionNode construction_site = objectHit.GetComponent<ConstructionNode>();
+                Debug.Log(objectHit.name);
+                Debug.Log(objectHit.gameObject.layer);
+                ConstructionNode construction_site = objectHit.GetComponentInChildren<ConstructionNode>();
+                construction_site.construct(buildings[selected]);
             }
+            
+            selected = '\0';
+            mouse_selected = false;
         }
 
         KeyCode[] hotkeys = new KeyCode[] { KeyCode.Q, KeyCode.W, KeyCode.E, KeyCode.R };
         // Select repair items with hotkeys (priority)
         foreach (KeyCode key in hotkeys)
         {
-            if (Input.GetKey(key))
+            if (Input.GetKeyDown(key))
             {
                 selected = (char)key;
                 mouse_selected = false;

@@ -7,12 +7,14 @@ public class SelectableRepairNode : MonoBehaviour
     private Camera main_camera;
     public GameObject pathfinding_route;
     public Vector3 unselected_position;
+    public Vector3 spawn_offset;
 
     public char hotkey;
     
     void Start()
     {
         main_camera = GameObject.FindObjectOfType<Camera>();
+        RepairNodeSelector.buildings[hotkey] = this;
     }
     
     void Update()
